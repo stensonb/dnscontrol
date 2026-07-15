@@ -95,6 +95,8 @@ require (
 	github.com/hetznercloud/hcloud-go/v2 v2.44.0
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.205
 	github.com/kylelemons/godebug v1.1.0
+	github.com/libdns/libdns v1.1.1
+	github.com/libdns/spaceship v1.0.0
 	github.com/luadns/luadns-go v0.3.0
 	github.com/mattn/go-isatty v0.0.22
 	github.com/netnod/netnod-primary-dns-client v1.1.0
