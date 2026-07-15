@@ -3,7 +3,7 @@ package spaceship
 import (
 	"context"
 	"fmt"
-	"strings"
+	"time"
 
 	"github.com/DNSControl/dnscontrol/v4/models"
 	"github.com/DNSControl/dnscontrol/v4/pkg/diff2"
@@ -17,7 +17,7 @@ func (n *spaceshipProvider) GetZoneRecords(dc *models.DomainConfig) (models.Reco
 		APISecret: n.ApiSecret,
 	}
 
-	records, err := p.GetRecords(context.Background(), domain)
+	records, err := p.GetRecords(context.Background(), dc.Name)
 	if err != nil {
 		return nil, fmt.Errorf("spaceship API error: %w", err)
 	}
@@ -25,14 +25,14 @@ func (n *spaceshipProvider) GetZoneRecords(dc *models.DomainConfig) (models.Reco
 	existingRecords := make([]*models.RecordConfig, 0, len(records))
 	for _, r := range records {
 		rc := &models.RecordConfig{
-			Type:     r.Type,
-			TTL:      uint32(r.TTL.Seconds()),
+			Type:     r.RR().Type,
+			TTL:      uint32(r.RR().TTL.Seconds()),
 			Original: r,
 		}
 
-		rc.SetLabel(r.Name, domain)
+		rc.SetLabel(r.RR().Name, dc.Name)
 
-		err := rc.PopulateFromString(r.Type, r.Value, domain)
+		err := rc.PopulateFromString(r.RR().Type, r.RR().Data, dc.Name)
 		if err != nil {
 			return nil, fmt.Errorf("error parsing record from spaceship: %w", err)
 		}
@@ -59,12 +59,12 @@ func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, e
 		description := change.MsgsJoined
 
 		var libdnsRecords []libdns.Record
-		for _, rc := range change.NewConfigs {
-			libdnsRecords = append(libdnsRecords, libdns.Record{
-				Type:  rc.Type,
-				Name:  rc.GetLabel(),
-				Value: rc.GetTargetField(),
-				TTL:   rc.TTL,
+		for _, rc := range change.New {
+			libdnsRecords = append(libdnsRecords, libdns.RR{
+				Type: rc.Type,
+				Name: rc.GetLabel(),
+				Data: rc.GetTargetField(),
+				TTL:  rc.TTL * time.Second,
 			})
 		}
 
@@ -79,7 +79,7 @@ func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, e
 			})
 		case diff2.DELETE:
 			var toDelete []libdns.Record
-			for _, rc := range change.OldConfigs {
+			for _, rc := range change.Old {
 				if r, ok := rc.Original.(libdns.Record); ok {
 					toDelete = append(toDelete, r)
 				}

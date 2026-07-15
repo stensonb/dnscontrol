@@ -35,10 +35,10 @@ func newProvider(config map[string]string, metadata json.RawMessage) (providers.
 	api.ApiSecret = config["api_secret"]
 
 	if api.ApiKey == "" {
-		return nil, fmt.Error("missing or empty api_key")
+		return nil, fmt.Errorf("missing or empty api_key")
 	}
 	if api.ApiSecret == "" {
-		return nil, fmt.Error("missing or empty api_secret")
+		return nil, fmt.Errorf("missing or empty api_secret")
 	}
 
 	return api, nil
