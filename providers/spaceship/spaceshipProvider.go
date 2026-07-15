@@ -7,11 +7,16 @@ import (
 	"github.com/DNSControl/dnscontrol/v4/pkg/providers"
 )
 
-const providerName = "SPACESHIP"
-
 func init() {
+	const providerName = "SPACESHIP"
+	const providerMaintainer = "@stensonb"
+	fns := providers.DspFuncs{
+		Initializer: newProvider,
+		RecordAuditor: AuditRecords,
+	}
 	// Register the provider with its activation string
-	providers.RegisterDomainServiceProviderType(providerName, newProvider, features)
+	providers.RegisterDomainServiceProviderType(providerName, fns, features)
+	providers.RegisterMaintainer(providerName, providerMaintainer)
 }
 
 var features = providers.DocumentationNotes{

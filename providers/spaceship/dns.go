@@ -64,7 +64,7 @@ func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, e
 				Type: rc.Type,
 				Name: rc.GetLabel(),
 				Data: rc.GetTargetField(),
-				TTL:  rc.TTL * time.Second,
+				TTL:  time.Duration(rc.TTL) * time.Second,
 			})
 		}
 
