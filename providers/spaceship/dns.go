@@ -12,13 +12,8 @@ import (
 	"github.com/namecheap/go-spaceship-sdk/client"
 )
 
-func (n *spaceshipProvider) GetZoneRecords(dc *models.DomainConfig) (models.Records, error) {
-	client, err := client.NewClient(n.BaseURL, n.ApiKey, n.ApiSecret)
-	if err != nil {
-		return models.Records{}, err
-	}
-
-	records, err := client.GetDNSRecords(context.Background(), dc.Name)
+func (s *spaceshipProvider) GetZoneRecords(dc *models.DomainConfig) (models.Records, error) {
+	records, err := s.client.GetDNSRecords(context.Background(), dc.Name)
 	if err != nil {
 		return models.Records{}, err
 	}
@@ -105,7 +100,7 @@ func toRecordConfigArray(domain string, records []client.DNSRecord) (models.Reco
 	return result, nil
 }
 
-func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, existing models.Records) ([]*models.Correction, int, error) {
+func (s *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, existing models.Records) ([]*models.Correction, int, error) {
 	return []*models.Correction{}, 0, nil
 	/*
 	   changes, actualChangeCount, err := diff2.ByRecord(existing, dc, nil)
@@ -173,13 +168,8 @@ func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, e
 	*/
 }
 
-func (n *spaceshipProvider) GetNameservers(domainName string) ([]*models.Nameserver, error) {
-	client, err := client.NewClient(n.BaseURL, n.ApiKey, n.ApiSecret)
-	if err != nil {
-		return []*models.Nameserver{}, err
-	}
-
-	di, err := client.GetDomainInfo(context.Background(), domainName)
+func (s *spaceshipProvider) GetNameservers(domainName string) ([]*models.Nameserver, error) {
+	di, err := s.client.GetDomainInfo(context.Background(), domainName)
 	if err != nil {
 		return []*models.Nameserver{}, err
 	}

@@ -5,13 +5,14 @@ import (
 	"fmt"
 
 	"github.com/DNSControl/dnscontrol/v4/pkg/providers"
+	"github.com/namecheap/go-spaceship-sdk/client"
 )
 
 func init() {
 	const providerName = "SPACESHIP"
 	const providerMaintainer = "@stensonb"
 	fns := providers.DspFuncs{
-		Initializer:   newProvider,
+		Initializer:   NewProvider,
 		RecordAuditor: AuditRecords,
 	}
 	// Register the provider with its activation string
@@ -29,29 +30,39 @@ var features = providers.DocumentationNotes{
 }
 
 type spaceshipProvider struct {
-	ApiKey    string
-	ApiSecret string
-	BaseURL   string
+	client    *client.Client
+	apiKey    string
+	apiSecret string
+	baseURL   string
 }
 
-func newProvider(config map[string]string, metadata json.RawMessage) (providers.DNSServiceProvider, error) {
-	api := &spaceshipProvider{}
+func NewProvider(config map[string]string, metadata json.RawMessage) (providers.DNSServiceProvider, error) {
+	apiKey := config["api_key"]
+	apiSecret := config["api_secret"]
+	baseURL := config["base_url"]
 
-	api.ApiKey = config["api_key"]
-	api.ApiSecret = config["api_secret"]
-	api.BaseURL = config["base_url"]
-
-	if api.ApiKey == "" {
+	if apiKey == "" {
 		return nil, fmt.Errorf("missing or empty api_key")
 	}
-	if api.ApiSecret == "" {
+
+	if apiSecret == "" {
 		return nil, fmt.Errorf("missing or empty api_secret")
 	}
 
 	// set default if not specified
-	if api.BaseURL == "" {
-		api.BaseURL = "https://spaceship.dev/api/v1"
+	if baseURL == "" {
+		baseURL = "https://spaceship.dev/api/v1"
 	}
 
-	return api, nil
+	client, err := client.NewClient(baseURL, apiKey, apiSecret)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build client: %w", err)
+	}
+
+	return &spaceshipProvider{
+		client:    client,
+		apiKey:    apiKey,
+		apiSecret: apiSecret,
+		baseURL:   baseURL,
+	}, nil
 }
