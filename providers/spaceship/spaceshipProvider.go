@@ -50,7 +50,7 @@ func newProvider(config map[string]string, metadata json.RawMessage) (providers.
 
 	// set default if not specified
 	if api.BaseURL == "" {
-		api.BaseURL = "https://spaceship.dev/api"
+		api.BaseURL = "https://spaceship.dev/api/v1"
 	}
 
 	return api, nil

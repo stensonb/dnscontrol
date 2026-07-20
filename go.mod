@@ -7,6 +7,7 @@ retract v4.8.0
 require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.4.31 // indirect
 	github.com/benbjohnson/clock v1.3.5 // indirect
+	github.com/dlclark/regexp2 v1.12.0 // indirect
 	github.com/eclipse/paho.golang v0.23.0 // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0 // indirect
@@ -95,10 +96,9 @@ require (
 	github.com/hetznercloud/hcloud-go/v2 v2.44.0
 	github.com/huaweicloud/huaweicloud-sdk-go-v3 v0.1.205
 	github.com/kylelemons/godebug v1.1.0
-	github.com/libdns/libdns v1.1.1
-	github.com/libdns/spaceship v1.0.0
 	github.com/luadns/luadns-go v0.3.0
 	github.com/mattn/go-isatty v0.0.22
+	github.com/namecheap/go-spaceship-sdk v0.1.0
 	github.com/netnod/netnod-primary-dns-client v1.1.0
 	github.com/nicholas-fedor/shoutrrr v0.16.1
 	github.com/nozzle/throttler v0.0.0-20180817012639-2ea982251481
