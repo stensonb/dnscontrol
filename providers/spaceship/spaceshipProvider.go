@@ -31,6 +31,7 @@ var features = providers.DocumentationNotes{
 type spaceshipProvider struct {
 	ApiKey    string
 	ApiSecret string
+        BaseURL   string
 }
 
 func newProvider(config map[string]string, metadata json.RawMessage) (providers.DNSServiceProvider, error) {
@@ -38,12 +39,18 @@ func newProvider(config map[string]string, metadata json.RawMessage) (providers.
 
 	api.ApiKey = config["api_key"]
 	api.ApiSecret = config["api_secret"]
+	api.BaseURL = config["base_url"]
 
 	if api.ApiKey == "" {
 		return nil, fmt.Errorf("missing or empty api_key")
 	}
 	if api.ApiSecret == "" {
 		return nil, fmt.Errorf("missing or empty api_secret")
+	}
+
+	// set default if not specified
+	if api.BaseURL == "" {
+		api.BaseURL = "https://spaceship.dev/api"
 	}
 
 	return api, nil

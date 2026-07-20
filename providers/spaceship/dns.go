@@ -15,6 +15,7 @@ func (n *spaceshipProvider) GetZoneRecords(dc *models.DomainConfig) (models.Reco
 	p := &spaceship.Provider{
 		APIKey:    n.ApiKey,
 		APISecret: n.ApiSecret,
+		BaseURL:   n.BaseURL,
 	}
 
 	records, err := p.GetRecords(context.Background(), dc.Name)
@@ -52,6 +53,7 @@ func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, e
 	p := &spaceship.Provider{
 		APIKey:    n.ApiKey,
 		APISecret: n.ApiSecret,
+		BaseURL:   n.BaseURL,
 	}
 
 	var corrections []*models.Correction
@@ -106,6 +108,14 @@ func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, e
 }
 
 func (n *spaceshipProvider) GetNameservers(domainName string) ([]*models.Nameserver, error) {
+/*
+	p := &spaceship.Provider{
+		APIKey:    n.ApiKey,
+		APISecret: n.ApiSecret,
+		BaseURL:   n.BaseURL,
+	}
+*/
+
 	return models.ToNameservers([]string{
 		"ns1.spaceship.com",
 		"ns2.spaceship.com",
