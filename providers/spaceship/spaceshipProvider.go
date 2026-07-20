@@ -11,7 +11,7 @@ func init() {
 	const providerName = "SPACESHIP"
 	const providerMaintainer = "@stensonb"
 	fns := providers.DspFuncs{
-		Initializer: newProvider,
+		Initializer:   newProvider,
 		RecordAuditor: AuditRecords,
 	}
 	// Register the provider with its activation string
@@ -31,7 +31,7 @@ var features = providers.DocumentationNotes{
 type spaceshipProvider struct {
 	ApiKey    string
 	ApiSecret string
-        BaseURL   string
+	BaseURL   string
 }
 
 func newProvider(config map[string]string, metadata json.RawMessage) (providers.DNSServiceProvider, error) {

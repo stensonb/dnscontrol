@@ -107,68 +107,70 @@ func toRecordConfigArray(domain string, records []client.DNSRecord) (models.Reco
 
 func (n *spaceshipProvider) GetZoneRecordsCorrections(dc *models.DomainConfig, existing models.Records) ([]*models.Correction, int, error) {
 	return []*models.Correction{}, 0, nil
-/*
-	changes, actualChangeCount, err := diff2.ByRecord(existing, dc, nil)
-	if err != nil {
-		return nil, 0, err
-	}
+	/*
+	   changes, actualChangeCount, err := diff2.ByRecord(existing, dc, nil)
 
-	p := &spaceship.Provider{
-		APIKey:    n.ApiKey,
-		APISecret: n.ApiSecret,
-		BaseURL:   n.BaseURL,
-	}
+	   	if err != nil {
+	   		return nil, 0, err
+	   	}
 
-	var corrections []*models.Correction
-	for _, change := range changes {
-		description := change.MsgsJoined
+	   	p := &spaceship.Provider{
+	   		APIKey:    n.ApiKey,
+	   		APISecret: n.ApiSecret,
+	   		BaseURL:   n.BaseURL,
+	   	}
 
-		var libdnsRecords []libdns.Record
-		for _, rc := range change.New {
-			libdnsRecords = append(libdnsRecords, libdns.RR{
-				Type: rc.Type,
-				Name: rc.GetLabel(),
-				Data: rc.GetTargetField(),
-				TTL:  time.Duration(rc.TTL) * time.Second,
-			})
-		}
+	   var corrections []*models.Correction
 
-		switch change.Type {
-		case diff2.CREATE:
-			corrections = append(corrections, &models.Correction{
-				Msg: description,
-				F: func() error {
-					_, err := p.AppendRecords(context.Background(), dc.Name, libdnsRecords)
-					return err
-				},
-			})
-		case diff2.DELETE:
-			var toDelete []libdns.Record
-			for _, rc := range change.Old {
-				if r, ok := rc.Original.(libdns.Record); ok {
-					toDelete = append(toDelete, r)
-				}
-			}
-			corrections = append(corrections, &models.Correction{
-				Msg: description,
-				F: func() error {
-					_, err := p.DeleteRecords(context.Background(), dc.Name, toDelete)
-					return err
-				},
-			})
-		case diff2.CHANGE:
-			corrections = append(corrections, &models.Correction{
-				Msg: description,
-				F: func() error {
-					_, err := p.SetRecords(context.Background(), dc.Name, libdnsRecords)
-					return err
-				},
-			})
-		}
-	}
+	   	for _, change := range changes {
+	   		description := change.MsgsJoined
 
-	return corrections, actualChangeCount, nil
-*/
+	   		var libdnsRecords []libdns.Record
+	   		for _, rc := range change.New {
+	   			libdnsRecords = append(libdnsRecords, libdns.RR{
+	   				Type: rc.Type,
+	   				Name: rc.GetLabel(),
+	   				Data: rc.GetTargetField(),
+	   				TTL:  time.Duration(rc.TTL) * time.Second,
+	   			})
+	   		}
+
+	   		switch change.Type {
+	   		case diff2.CREATE:
+	   			corrections = append(corrections, &models.Correction{
+	   				Msg: description,
+	   				F: func() error {
+	   					_, err := p.AppendRecords(context.Background(), dc.Name, libdnsRecords)
+	   					return err
+	   				},
+	   			})
+	   		case diff2.DELETE:
+	   			var toDelete []libdns.Record
+	   			for _, rc := range change.Old {
+	   				if r, ok := rc.Original.(libdns.Record); ok {
+	   					toDelete = append(toDelete, r)
+	   				}
+	   			}
+	   			corrections = append(corrections, &models.Correction{
+	   				Msg: description,
+	   				F: func() error {
+	   					_, err := p.DeleteRecords(context.Background(), dc.Name, toDelete)
+	   					return err
+	   				},
+	   			})
+	   		case diff2.CHANGE:
+	   			corrections = append(corrections, &models.Correction{
+	   				Msg: description,
+	   				F: func() error {
+	   					_, err := p.SetRecords(context.Background(), dc.Name, libdnsRecords)
+	   					return err
+	   				},
+	   			})
+	   		}
+	   	}
+
+	   return corrections, actualChangeCount, nil
+	*/
 }
 
 func (n *spaceshipProvider) GetNameservers(domainName string) ([]*models.Nameserver, error) {
